@@ -1,0 +1,19 @@
+\\ Udemy course CKA
+kubectl get pods
+kubectl run nginx image=nginx
+kubectl describe pod nginx
+kubectl run redis image=redis123 --dry-run:client -o yml > pod-difinition.yaml
+
+\\ pod-difinition.yaml file
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+spec:
+  containers:
+    - image: redis123
+      name: redis
+
+kubectl apply -f pod-difinition.yaml
+
+
