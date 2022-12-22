@@ -1,0 +1,25 @@
+\\ yaml file for replicaset
+apiVersion: apps\v1
+kind: ReplicaSet
+metadata:
+  name: my-replicaset
+spec:
+  replicas: 5
+  selector:
+    tier: nginx
+  template:
+    metadata:
+      tier: nginx
+    spec:
+      containers:
+        - name: my-webapp
+          image: nginx
+
+\\ commands for replicaset
+kubectl get replicaset
+kubectl get rs
+kubectl create replicaset -f replicaset-difinition.yaml
+kubectl describe replicaset [name of replicaset]
+kubectl edit replicaset [name of replicaset]
+kubectl scale replicaset [name of replicaset] --replicas=6
+
