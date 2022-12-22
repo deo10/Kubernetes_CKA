@@ -1,0 +1,31 @@
+\\ deploy pod-difinition
+apiVersion: apps/v1
+kind: apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: <Port>
+
+\\ deployment kubectl commands
+kubectl get all
+kebectl describe deployment [deployment name]
+kubectl create deployment [name] --image=nginx --replicas=5 --dry-run=client -o yaml > [file name.yaml]
+kubectl apply -f [fine name.yaml]
