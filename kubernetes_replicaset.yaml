@@ -1,3 +1,12 @@
+\\ commands for replicaset
+kubectl get replicaset
+kubectl get rs
+kubectl create replicaset -f replicaset-difinition.yaml
+kubectl describe replicaset [name of replicaset]
+kubectl edit replicaset [name of replicaset]
+kubectl scale replicaset [name of replicaset] --replicas=6
+
+
 \\ yaml file for replicaset
 apiVersion: apps\v1
 kind: ReplicaSet
@@ -15,11 +24,5 @@ spec:
         - name: my-webapp
           image: nginx
 
-\\ commands for replicaset
-kubectl get replicaset
-kubectl get rs
-kubectl create replicaset -f replicaset-difinition.yaml
-kubectl describe replicaset [name of replicaset]
-kubectl edit replicaset [name of replicaset]
-kubectl scale replicaset [name of replicaset] --replicas=6
+
 

@@ -1,0 +1,16 @@
+//kubectl commands
+kubectl get pods --namespce=kube-system
+kubectl create -f [file_name] --namespace=dev
+kubectl config set-context $(kubectl config current-context) --namespace=dev 
+kubectl get pods --all-namespaces
+
+\\ to create resource in specific --namespace add in yaml
+metadata:
+  namespace: dev
+
+\\ namespace difinition
+apiVersion: v1 
+kind: Namespace
+metadata:
+  name: dev
+
