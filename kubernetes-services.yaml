@@ -1,0 +1,23 @@
+\\ service difinition 
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  type: NodePort
+  selector:
+    app: myapp
+    type: frontend
+  ports:
+  - port: Service_Port
+    targetPort: Pod_Port
+    nodePort: Node_port <30000-32767>
+
+\\ kubectl commands
+kubectl get services
+curl http://[ip_node]:[nodePort]
+kubectl describe svc [service_name]
+! check endpoints to see connected Pods
+
+
+
