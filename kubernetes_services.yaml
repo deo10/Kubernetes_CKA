@@ -4,6 +4,18 @@ curl http://[ip_node]:[nodePort]
 kubectl describe svc [service_name]
 ! check endpoints to see connected Pods
 
+kubectl run redis --image=redis --labels='tier=db'
+(type!)
+kubectl expose pod redis --port=6379 --name redis-service --dry-run=client -o yaml
+or (selector!)
+kubectl create service clusterip redis --tcp=6379:6379 --dry-run=client -o yaml 
+
+kubectl expose pod nginx --type=NodePort --port=80 --name=nginx-service --dry-run=client -o yaml
+kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run=client -o yaml
+
+
+
+
 \\ service difinition 
 apiVersion: v1
 kind: Service
