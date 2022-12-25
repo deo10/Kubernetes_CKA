@@ -3,6 +3,8 @@ kubectl get all
 kebectl describe deployment [deployment name]
 kubectl create deployment [name] --image=nginx --replicas=5 --dry-run=client -o yaml > [file name.yaml]
 kubectl apply -f [fine name.yaml]
+kubectl set image deployment/myapp-deployment \ nginx=nginx:1.9.1
+
 
 \\ deploy pod-difinition
 apiVersion: apps/v1

@@ -1,15 +1,21 @@
 \\ kubectl commands
 kubectl get pods
 kubectl get pods -l='tier=db'
+kubectl get pods --selector="env=dev","bu=finance"
+kubectl get pods --show-labels=true
+kubectl get pods -o wide
+
 kubectl run nginx --image=nginx
 kubectl describe pod nginx
 kubectl run redis --image=redis123 --dry-run:client -o yml > pod-difinition.yaml
+kubectl run redis --image=redis --port=8080 --expose=true
 kubectl apply -f pod-difinition.yaml
 kubectl edit pod [pod_name]
-kubectl run redis --image=redis --port=8080 --expose=true
 
 как поменять значения в под командой?
-
+kubectl label pods my-pod status=new
+kubectl label --overwrite pods my-pod status=old
+kubectl label pods --all status=new
 
 \\ pod-difinition.yaml file
 apiVersion: v1
@@ -18,8 +24,13 @@ metadata:
   name: redis
 spec:
   containers:
-    - image: redis123
-      name: redis
+  - image: redis123
+    name: redis
+  tolerations:
+  - key: "env"
+    value: "dev"
+    effect: "NoSchedule"
+    operator: "Equal"
 
 
 

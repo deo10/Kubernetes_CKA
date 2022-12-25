@@ -21,8 +21,8 @@ spec:
       tier: nginx
     spec:
       containers:
-        - name: my-webapp
-          image: nginx
+      - name: my-webapp
+        image: nginx
 
 
 

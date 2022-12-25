@@ -5,9 +5,9 @@ kubectl describe svc [service_name]
 ! check endpoints to see connected Pods
 
 kubectl run redis --image=redis --labels='tier=db'
-(type!)
+! type
 kubectl expose pod redis --port=6379 --name redis-service --dry-run=client -o yaml
-or (selector!)
+! selector 
 kubectl create service clusterip redis --tcp=6379:6379 --dry-run=client -o yaml 
 
 kubectl expose pod nginx --type=NodePort --port=80 --name=nginx-service --dry-run=client -o yaml
