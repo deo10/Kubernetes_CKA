@@ -1,0 +1,13 @@
+\\ config
+--pod-manifest-pat=/etc/kubernetes/manifests
+or 
+--kubeconfig=/var/lib/kubelet/ -> config.yaml
+look - staticPodPath
+
+kubectl get pods -A 
+to see all pods - check pods that has node name in their name-container
+
+kubectl get pod [pod_name] -n=[namespace] -o yaml
+look - owner reference
+
+
