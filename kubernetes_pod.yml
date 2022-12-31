@@ -7,17 +7,22 @@ kubectl get pods -o wide
 
 kubectl run nginx --image=nginx
 kubectl describe pod nginx
+kubectl logs -f [pod_name]
+
 kubectl run redis --image=redis123 --dry-run=client -o yml > pod-difinition.yaml
 kubectl run redis --image=redis --port=8080 --expose=true (pod + clusterIP service)
 kubectl apply -f pod-difinition.yaml
 kubectl edit pod [pod_name]
 
-как поменять значения label в под командой?
+\\ как поменять значения label в под командой?
 kubectl label pods my-pod status=new
 kubectl label --overwrite pods my-pod status=old
 kubectl label pods --all status=new
 
 kubectl run redis --image=redis --command sleep 1000 --dry-run=client -o yaml
+kubectl edit pod [pod_name]
+\\ try to change command - fail, but
+kubectl replace --focre -f temporary_saved.yaml
 
 \\ pod-difinition.yaml file
 apiVersion: v1
@@ -28,6 +33,8 @@ spec:
   containers:
   - image: redis123
     name: redis
+    command:
+      ['sleep','2000']
     resources:
       memory: 1Gi
       cpu: 1

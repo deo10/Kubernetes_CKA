@@ -1,0 +1,34 @@
+
+
+
+\\ custom scheduler.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-custom-scheduler
+  namespace: kube-system
+spec:
+  containers:
+  - command:
+    - kube-scheduler
+    - --address=127.0.0.1
+    - --kubeconfig=/etc/kubernetes/scheduler.conf
+    - --config=/etc/kubernetes/my-sch-config.yaml
+    name: kube-scheduler
+    image: k8s.gcf.io/kube-scheduler-...
+
+
+\\ my-sch-config.yaml
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+profiles:
+- schedulerName: my-scheduler
+leaderElection:
+  leaderElect: true
+  resourceNamespace: kube-system
+  resourceName: -object-my-scheduler
+
+  
+
+
+

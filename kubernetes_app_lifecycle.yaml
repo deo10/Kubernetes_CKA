@@ -1,0 +1,46 @@
+\\ rooling updates and rollbacks
+kubectl create -f deployment.yaml
+kubectl get deploy
+kubectl apply -f deployment.yaml
+or
+kubectl set image [deploy_name] nginx=nginx:1.9.1
+
+kubectl rollout status [deploy_name]
+kubectl rollout history [deploy_name]
+
+kubectl rollout undo [deploy_name]
+
+\\deploy difinition with deploy strategy
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      strategy:
+        rollingUpdate:
+          maxSurge: 25%
+          maxUnavailable: 25%
+        type: RollingUpdate
+      containers:
+      - name: myapp
+        image: nginx:1.9.1
+
+        or
+
+      strategy:
+        type: Recreate
+      containers:
+      - name: myapp
+        image: nginx:1.9.1
+
+
+
