@@ -1,7 +1,23 @@
+kubectl get events -o wide
+- check events what\where
+kubectl logs my-custom-scheduler -n=kube-system
+- look scheduler logs
+kubectl create -f dif.yaml
+
+\\pod with custom scheduler
+kind: apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+spec:
+  containers:
+  - name: myapp
+    image: <Image>
+    schedulerName: my-custom-scheduler
 
 
 
-\\ custom scheduler.yaml
+\\ Create custom scheduler.yaml
 apiVersion: v1
 kind: Pod
 metadata:
