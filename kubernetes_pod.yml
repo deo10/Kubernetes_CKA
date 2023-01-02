@@ -8,6 +8,8 @@ kubectl get pods -o wide
 kubectl run nginx --image=nginx
 kubectl describe pod nginx
 kubectl logs -f [pod_name]
+kubectl logs [pod_name] -c [container_name]
+kubectl exec -it [pod_name] -- cat /log/app.log
 
 kubectl run redis --image=redis123 --dry-run=client -o yml > pod-difinition.yaml
 kubectl run redis --image=redis --port=8080 --expose=true (pod + clusterIP service)
@@ -30,9 +32,13 @@ kind: Pod
 metadata:
   name: redis
 spec:
+  initContainers:
+  - image: init-cont-image
+    name: init-cont
+    command: [curl repo from git]
   containers:
   - image: redis123
-    name: redis
+    name: redis_1
     command:
       ['sleep','2000']
     resources:
@@ -41,6 +47,8 @@ spec:
     limits:
       memory: 2Gi
       cpu: 2
+  - image: redis123
+    name: redis_2
   nodeSelector:
     size: large
   tolerations:
