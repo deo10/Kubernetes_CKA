@@ -1,0 +1,75 @@
+\\Clients certificates for clients
+admin.crt/key
+scheduler.crt/key
+controller-manager.crt/key
+kube-proxy.crt/key
+apiserver-kubelet-client.crt/key
+apiserver-etcd-client.crt/key
+kubelet-client.crt/key
+
+\\server certificates for servers
+etcdserver.crt/key
+apiserver.crt/key
+kubelet.crt/key
+
+\\Openssl
+Generate certs
+- generate for CA
+openssl genrsa -out ca.key 2048
+- req sign
+openssl req -new -key ca.key -subj "/CN=kubernetes-CA" -out
+- sign
+openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+
+- generate for admin
+openssl genrsa -out admin.key 2048
+- req sign
+openssl req -new -key admin.key -subj "/CN=kube-admin/O=system:masters"
+- sign
+openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
+
+View certs
+
+- hardway
+cat /etc/systemd/system/kube-apiserver.service
+- kubeadm
+cat /etc/kubernetes/manifests/kube-apiserver.yaml
+
+- check apiserver certificate
+openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+- check issuer, end-date, CN, Alliases;
+
+API certs
+
+- new user generate cert + key
+openssl genrsa -out jane.key 2048
+- req to sign
+openssl req -new -key jane.key -subj"/CN=jane" -out jane.csr
+- code to base64
+cat jane.crs | base64 | tr -d "/n"
+- create yaml for CertificateSigningRequest
+
+apiVersion: certificates.k8s.io/v1beta1
+kind: CertificateSigningRequest
+metadata:
+  name: jane
+spec:
+  signerName: kubernetes.io/kube-apiserver-client
+  groups:
+  - system:authenticated
+  usages:
+  - client auth
+  request:
+  *result of previous command*
+
+  kubectl create -f [dif.yaml]
+  kubectl get csr or get csr [name_csr] -o yaml
+  kubectl approve/deny certificate [name]
+  kubectl describe csr [name]
+
+  - kube-controller-manager controls certs workflow
+  - check
+  cat /etc/kubernetes/manifests/kube-controller-manager.yaml
+  - signing key
+  - signing crt
+

@@ -1,0 +1,45 @@
+\\ Role Based Access Controls - RBAC
+
+cat /ect/kubernetes/manifests/kube-apiserver.yaml
+- check authorization-mode value
+
+k get roles \ rolebindings
+k describe roles \ rolebindings
+k edit role [name]
+k auth can-i --as dev-user --list (all permissions for dev-user)
+k get pods --as dev-user (to check access)
+
+
+k create role developer --resources=pods --verb=get,list --dry-run=client -o yaml
+k create rolebinding dev-user-developer-binding --role=developer --user=dev-user --dry-run=client -o yaml
+
+
+- developer-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+rules:
+- apiGroups:
+  - [""]
+  - ["apps"]
+  resources: 
+  ["pods"]
+  ["deployments"]
+  verbs: ["get", "list", "create", "update", "delete"]
+  resourceNames:
+
+- dev-user-developer-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-user-developer-binding
+subjects:
+- kind: User
+  name: dev-user
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: developer
+  apiGroup: rbac.authorization.k8s.io
+

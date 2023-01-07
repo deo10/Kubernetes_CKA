@@ -1,0 +1,11 @@
+-default path for config file
+cat /root/.kube/config
+vi /root/.kube/config
+
+kubectl config view
+- switch context
+kubectl config use-context [context_name]
+kubectl config use-context [context_name] --config=/home/admin/my-config-file
+- add new parameter and value
+kubectl config set-cluster/set-context/set-user
+

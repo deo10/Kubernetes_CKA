@@ -3,7 +3,6 @@ kubectl get services
 curl http://[ip_node]:[nodePort]
 kubectl describe svc [service_name]
 ! check endpoints to see connected Pods
-
 kubectl run redis --image=redis --labels='tier=db'
 ! type
 kubectl expose pod redis --port=6379 --name redis-service --dry-run=client -o yaml
