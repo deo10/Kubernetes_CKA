@@ -1,0 +1,20 @@
+\\ Image Security
+
+docker login private-registry.io
+->
+k create secret docker-registry regcred --docker-server= --docker-username= --docker-password= docker-email=
+
+\\pod yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+spec:
+  containers:
+  - name: myapp
+    image: docker-registry.io/apps/app
+  imagePullSecrets:
+  - name: regcred
+
+  
+

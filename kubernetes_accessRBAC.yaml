@@ -2,6 +2,7 @@
 
 cat /ect/kubernetes/manifests/kube-apiserver.yaml
 - check authorization-mode value
+ps -aux | grep authorization 
 
 k get roles \ rolebindings
 k describe roles \ rolebindings
@@ -9,6 +10,7 @@ k edit role [name]
 k auth can-i --as dev-user --list (all permissions for dev-user)
 k get pods --as dev-user (to check access)
 
+k api-resources --namespaced=true/false (cluster vs namespaced resources)
 
 k create role developer --resources=pods --verb=get,list --dry-run=client -o yaml
 k create rolebinding dev-user-developer-binding --role=developer --user=dev-user --dry-run=client -o yaml

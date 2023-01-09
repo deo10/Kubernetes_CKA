@@ -1,0 +1,19 @@
+\\ Security Context
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+spec:
+  securityContext:
+    runAsUser: 1000
+  containers:
+  - name: myapp1
+    image: <Image>
+    securityContext:
+      runAsUser: 1010
+      capabilities:
+        add: ['MAC_ADMIN']
+  - name: myapp2
+    image: <Image>
+
