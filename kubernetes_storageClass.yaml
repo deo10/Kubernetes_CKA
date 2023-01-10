@@ -1,0 +1,11 @@
+\\ Storage Class (pv provisioner)
+
+kubectl get\describe sc
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: sc-name
+provisioner: kubernetes.io/[name]
+reclaimPolicy: Retain
+volumeBindingMode: Immediate

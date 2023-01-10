@@ -1,0 +1,20 @@
+\\Volumes
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    name: myapp
+spec:
+  containers:
+  - name: myapp
+    image: <Image>
+    volumeMounts:
+    - monthPath: /opt
+      name: [volume-name]
+  volumes:
+  - name: [volume-name]
+    hostPath:
+      path: /data
+      type: Directory
