@@ -1,0 +1,55 @@
+\\ linux basic network
+- list and modify interfaces on the host
+ip link 
+- see ip's assigned on interfaces
+ip addr
+- set ip's on interfaces
+ip addr add 192.168.1.10/24 dev eth0
+! will work only till restart
+
+- view routing table
+ip route
+route
+- add entries in routing table
+ip route add 192.168.1.0/24 via 192.168.2.1
+
+arp
+
+dig
+
+- view services and port listen
+netstat -plnt
+
+- execute command on spec node
+ssh [node_name] exec [command]
+
+\\network namespaces
+- list namespaces
+ip netns 
+- create ns
+ip netns add
+- execute command on spec ns
+ip netns exec [ns_name] [command]
+
+! config files
+cat /etc/sysctl.conf
+cat /proc/sys/net/ipv4/ip_forward
+cat /etc/hosts
+cat /resolf.conf
+
+\\CNI
+ps -aux | grep kubelet
+
+- supported plugins
+/opt/cni/bin
+- apllied plug-in
+ls /etc/cni/net.d/
+
+\\CoreDNS
+cat /etc/coredns/Corefile
+k get configmap -n kube-system
+k get service -n kube-system
+
+
+
+
