@@ -33,9 +33,15 @@ ip netns exec [ns_name] [command]
 
 ! config files
 cat /etc/sysctl.conf
+- IP forwarding (Enable/Disable)
 cat /proc/sys/net/ipv4/ip_forward
+- local routes
 cat /etc/hosts
+- DNS
 cat /resolf.conf
+
+- service ip range
+cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep ip
 
 \\CNI
 ps -aux | grep kubelet

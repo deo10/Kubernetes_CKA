@@ -5,6 +5,7 @@ kubectl create deployment [name] --image=nginx --replicas=5 --dry-run=client -o 
 kubectl apply -f [fine name.yaml]
 kubectl set image deployment/myapp-deployment \ nginx=nginx:1.9.1
 
+kubectl expose deploy [name] --type=NodePort --port=80 --name=nginx-service --dry-run=client -o yaml
 
 \\ deploy pod-difinition
 apiVersion: apps/v1
