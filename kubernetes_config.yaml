@@ -2,6 +2,12 @@
 cat /root/.kube/config
 vi /root/.kube/config
 
+kubelet config
+/var/lib/kubelet/config.yaml
+/etc/kubernetes/kubelet.conf
+
+
+
 kubectl config view
 - switch context
 kubectl config use-context [context_name]
