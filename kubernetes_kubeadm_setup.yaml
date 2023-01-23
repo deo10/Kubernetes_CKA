@@ -21,6 +21,6 @@ To start using your cluster, you need to run the following as a regular user:
 node01 join the cluster
 get the details on master node and ssh to node01 -> execute
 
-kubeadm join 10.197.255.9:6443 --token lofudy.24vax75f4odblanc \
+kubeadm join 10.197.255.9:6443 --token [token] \
 >         --discovery-token-ca-cert-hash sha256:dac0eaae31211c4531e0b27794d655ba73adf27cd76b55965aec01922ff4f605 
 
