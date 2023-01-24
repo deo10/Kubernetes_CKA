@@ -4,6 +4,7 @@ kubectl logs -f [pod_name\service_name]
 kubectl logs [pod_name] -c [container_name]
 kubectl exec -it [pod_name] -- cat /log/app.log
 
+ps -aux
 crictl ps -a | grep [service]
 crictl logs [container_id]
 
@@ -14,4 +15,5 @@ k auth can-i --as dev-user --list (all permissions for dev-user)
 - what user is running Pod/Container?
 k exec [pod-name] -- whoami
 k exec [pod-name] -c [container_name] --whoami
+
 
