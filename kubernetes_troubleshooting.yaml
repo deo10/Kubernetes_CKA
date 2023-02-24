@@ -7,6 +7,8 @@ kubectl exec -it [pod_name] -- cat /log/app.log
 crictl ps -a | grep [service]
 crictl logs [container_id]
 
+journalctl | grep kubelet
+
 k get pods --as dev-user
 k auth can-i get pods --as dev-user
 k auth can-i --as dev-user --list (all permissions for dev-user)

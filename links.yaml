@@ -1,0 +1,93 @@
+
+InitContainers
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-initialization/
+
+NodeAffinity
+https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
+
+Certificats
+https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/
+https://kubernetes.io/docs/tasks/administer-cluster/certificates/
+
+Service Account
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+
+DaemonSet
+https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/
+
+
+ConfigMaps
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+
+Storage
+Secrets
+https://kubernetes.io/docs/concepts/configuration/secret/
+https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/
+https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/
+
+PV + PVC
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
+Storage class
+https://kubernetes.io/docs/concepts/storage/storage-classes/
+
+Network
+
+
+Ingress
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+
+
+install
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+ETCD
+https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/
+
+
+JSON PATH + Sort by
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/
+https://kubernetes.io/docs/reference/kubectl/jsonpath/
+
+
+Troubleshoot
+https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/
+
+path:
+kubectl get node -o json | jq -c 'path(..)|[.[]|tostring]|join(".")' | grep -i status
+kubectl get node -o json | jq -c 'paths|join(".")'
+
+
+Example:
+Print the names of all deployments in the admin2406 namespace in the following format
+DEPLOYMENT CONTAINER_IMAGE READY_REPLICAS NAMESPACE
+<deployment name> <container image used> <ready replica count> <Namespace>
+. The data should be sorted by the increasing order of the deployment name.
+Write the result to the file /opt/admin2406_data.
+
+k get deploy -n admin2406 -o='custom-columns=DEPLOYMENT:.metadata.name,CONTAINER_IMAGE:.spec.template.spec.containers[*].image,READY_REPLICAS:.status.readyReplicas,NAMESPACE:.metadata.namespace'
+
+Example:
+Find all nodes that are Ready, no NoSchedule taint
+
+k get nodes -o='custom-columns=NodeName:.metadata.name,Status:.status.conditions[?(@.type=="Ready")].type,Taint:.spec.taints[*].effect' --no-headers | grep -v NoSchedule
+
+Example:
+Find a POD that consuming max CPU
+
+k top pod --sort-by cpu
+
+Example:
+Sort all pods by creation date
+
+k get pods -o='custom-columns=PodName:.metadata.name,CreationDate:.status.startTime' --sort-by=.status.startTime
+
+Example:
+list all clusters from kubeconfig file
+
+k config view --kubeconfig=/root/CKA/admin.kubeconfig  -o jsonpath='{.clusters[*].name}'
+k config view --kubeconfig=/root/CKA/admin.kubeconfig  -o jsonpath='{range .clusters[*]}{.name}{"\n"}{end}'
+
+
