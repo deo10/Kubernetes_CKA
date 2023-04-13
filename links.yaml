@@ -2,50 +2,6 @@
 InitContainers
 https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-initialization/
 
-NodeAffinity
-https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes-using-node-affinity/
-
-Certificats
-https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/
-https://kubernetes.io/docs/tasks/administer-cluster/certificates/
-
-Service Account
-https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-
-DaemonSet
-https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/
-
-
-ConfigMaps
-https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
-
-Storage
-Secrets
-https://kubernetes.io/docs/concepts/configuration/secret/
-https://kubernetes.io/docs/tasks/configmap-secret/managing-secret-using-kubectl/
-https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/
-
-PV + PVC
-https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
-Storage class
-https://kubernetes.io/docs/concepts/storage/storage-classes/
-
-Network
-
-
-Ingress
-https://kubernetes.io/docs/concepts/services-networking/ingress/
-
-
-install
-https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
-https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
-https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
-ETCD
-https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/
-
-
 JSON PATH + Sort by
 https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/
