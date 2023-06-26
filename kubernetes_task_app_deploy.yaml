@@ -1,0 +1,109 @@
+#KodeKloud task to setup Guestbook app
+#
+#Additional steps are
+# kubectl expose deployment redis-master --name redis-master --port 6379 --targetPort 6379
+# kubectl expose deployment redis-slave --name redis-slave --port 6379 --targetPort 6379
+# kubectl expose deployment frontend --name frontend --type NodePort --port 80
+# kubectl edit service frontend -> change nodePort value to <value_from_the_task>
+# check the app using the URL + nodePort value
+
+
+#Redis master
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-master
+  labels:
+    app: redis-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-master
+  template:
+    metadata:
+      labels:
+        app: redis-master
+    spec:
+      containers:
+      - name: master-redis-datacenter
+        image: redis
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "100Mi"
+            cpu: "100m"      
+        ports:
+        - containerPort: 6379
+
+---
+#redis slave
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-slave
+  labels:
+    app: redis-slave
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: redis-slave
+  template:
+    metadata:
+      labels:
+        app: redis-slave
+    spec:
+      containers:
+      - name: slave-redis-datacenter
+        image: gcr.io/google_samples/gb-redisslave:v3
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "100Mi"
+            cpu: "100m"  
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 6379
+
+---
+
+#frontend deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: php-redis-datacenter
+        image: gcr.io/google-samples/gb-frontend:v4
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "100Mi"
+            cpu: "100m"  
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 80
+        
