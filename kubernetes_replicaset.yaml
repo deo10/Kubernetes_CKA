@@ -8,21 +8,27 @@ kubectl scale replicaset [name of replicaset] --replicas=6
 
 
 \\ yaml file for replicaset
-apiVersion: apps\v1
+apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
-  name: my-replicaset
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
 spec:
-  replicas: 5
+  # modify replicas according to your case
+  replicas: 3
   selector:
-    tier: nginx
+    matchLabels:
+      tier: frontend
   template:
     metadata:
-      tier: nginx
+      labels:
+        tier: frontend
     spec:
       containers:
-      - name: my-webapp
-        image: nginx
+      - name: php-redis
+        image: gcr.io/google_samples/gb-frontend:v3
 
 
 
