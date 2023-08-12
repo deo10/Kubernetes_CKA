@@ -17,7 +17,7 @@ spec:
       containers:
       - name: ic-main-datacenter
         image: ubuntu:latest
-        command: ['/bin/bash', '-c', 'while true; do cat /ic/media; sleep 5; done']
+        command: ['/bin/bash', '-c', 'while true; do cat /ic/media; sleep 5; done']        
         volumeMounts:
         - name: ic-volume-datacenter
           mountPath: /ic
