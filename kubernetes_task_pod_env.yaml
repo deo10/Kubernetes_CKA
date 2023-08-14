@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: print-envars-greeting
+  labels:
+    name: myapp
+spec:
+  containers:
+  - name: print-env-container
+    image: bash
+    env:
+    - name: GREETING
+      value: "Welcome to"
+    - name: COMPANY
+      value: "Stratos"
+    - name: GROUP
+      value: "Industries"
+    - name: MESSAGE
+      value: "$(GREETING) $(COMPANY) $(GROUP)"
+    command: ["echo"]
+    args: ["$(GREETING) $(COMPANY) $(GROUP)"]
+    resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "100Mi"
+            cpu: "100m"
