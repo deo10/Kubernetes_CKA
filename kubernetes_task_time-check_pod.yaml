@@ -15,22 +15,27 @@ metadata:
   namespace: xfusion
 spec:
   containers:
-  - image: busybox:latest
-    name: time-check
-    command: ['/bin/sh', '-c', 'while true; do date; sleep $TIME_FREQ; done > /opt/dba/time/time-check.log']
-    envFrom:
-      - configMapRef:
-          name: time-config
-    volumeMounts:
-    - name: log-volume
-      mountPath: /opt/dba/time
-    resources:
-          requests:
-            memory: "100Mi"
-            cpu: "100m"
-          limits:
-            memory: "100Mi"
-            cpu: "100m" 
+    - image: busybox:latest
+      name: time-check
+      command:
+        [
+          "/bin/sh",
+          "-c",
+          "while true; do date; sleep $TIME_FREQ; done > /opt/dba/time/time-check.log",
+        ]
+      envFrom:
+        - configMapRef:
+            name: time-config
+      volumeMounts:
+        - name: log-volume
+          mountPath: /opt/dba/time
+      resources:
+        requests:
+          memory: "100Mi"
+          cpu: "100m"
+        limits:
+          memory: "100Mi"
+          cpu: "100m"
   volumes:
-  - name: log-volume
-    emptyDir: {}
+    - name: log-volume
+      emptyDir: {}

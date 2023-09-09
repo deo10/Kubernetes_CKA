@@ -1,0 +1,136 @@
+#create LAMP stack on k8s
+
+#create MYSQL secrets
+kubectl create secret generic database \
+--from-literal=MYSQL_ROOT_PASSWORD=admin123 \
+--from-literal=MYSQL_DATABASE=kodekloud \
+--from-literal=MYSQL_USER=kodekloud \
+--from-literal=MYSQL_PASSWORD=admin123 \
+--from-literal=MYSQL_HOST=mysql-service
+
+#create configMap for PHP and Deployment of HTTPD\PHP + MYSQL
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: php-config
+data:
+  php.ini: |
+     variables_order = "EGPCS"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lamp-wp
+  labels:
+    app: lamp-wp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lamp-wp
+  template:
+    metadata:
+      labels:
+        app: lamp-wp
+    spec:
+      containers:
+      - name: httpd-php-container
+        image: webdevops/php-apache:alpine-3-php7
+        ports:
+        - containerPort: 80
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_PASSWORD
+        - name: MYSQL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_HOST
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/docker/etc/php/php.ini
+          subPath: php.ini
+      - name: mysql-container
+        image: mysql:5.6
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_USER
+        - name: MYSQL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_HOST
+        ports:
+        - containerPort: 3306
+      volumes:
+      - name: config-volume
+        configMap:
+          name: php-config
+---
+ 
+#create NodePort service for web-app and ClusterIP for mysql
+
+kubectl expose deployment lamp-wp --name lamp-service --type NodePort --port 80
+#edit NodePort to required
+kubectl expose deployment lamp-wp --name mysql-service --type ClusterIP --port 3306
+
+#copy /tmp/index.php to php POD
+kubectl cp /tmp/index.php lamp-wp-84d44d45d9-8v4j5:/app -c httpd-php-container
+kubectl exec -it lamp-wp-84d44d45d9-8v4j5 -c httpd-php-container -- bash
+#check that file is copied
+
+#content of index.php
+<?php
+$dbname = $_ENV["MYSQL_DATABASE"];
+$dbuser = $_ENV["MYSQL_USER"];
+$dbpass = $_ENV["MYSQL_PASSWORD"];
+$dbhost = $_ENV["MYSQL_HOST"];
+
+$connect = mysqli_connect($dbhost, $dbuser, $dbpass) or die("Unable to Connect to '$dbhost'");
+
+$test_query = "SHOW TABLES FROM $dbname";
+$result = mysqli_query($test_query);
+
+if ($result->connect_error) {
+   die("Connection failed: " . $conn->connect_error);
+}
+  echo "Connected successfully";

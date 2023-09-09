@@ -1,0 +1,72 @@
+#Create PV + PVC + Pod + Service
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-devops
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 4Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  hostPath:
+    path: /mnt/finance
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-devops
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-devops
+  labels:
+    app: myapp
+    type: frontend
+spec:
+  containers:
+    - image: nginx:latest
+      name: container-devops
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: pvc-devops
+      ports:
+        - containerPort: 80
+      resources:
+        requests:
+          memory: "100Mi"
+          cpu: "100m"
+        limits:
+          memory: "100Mi"
+          cpu: "100m"
+  volumes:
+    - name: pvc-devops
+      persistentVolumeClaim:
+        claimName: pvc-devops
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-devops
+spec:
+  type: NodePort
+  selector:
+    app: myapp
+    type: frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30008
