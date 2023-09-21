@@ -8,7 +8,15 @@ ps -aux
 crictl ps -a | grep [service]
 crictl logs [container_id]
 
+journalctl -fu kubelet | grep apiserver
 journalctl | grep kubelet
+
+#logs for the pods
+/var/log/pods
+#show logs for apiserver pod
+ls -ld *api*
+#static pods path
+/etc/kubernetes/manifests/
 
 k get pods --as dev-user
 k auth can-i get pods --as dev-user
