@@ -2,11 +2,15 @@
 #create deployment in k8s using terraform
 
 #install terraform 1.1.5
+# install_terraform.sh
+
+#!/bin/bash
 
 curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-apt update
-apt install terraform=1.1.5
+sudo apt update
+sudo apt install terraform=1.1.5
+
 
 #configure provider.tf for kubernetes
 #local name = kubernetes
@@ -85,7 +89,7 @@ resource "kubernetes_service" "webapp-service" {
   }
   spec {
     selector = {
-      name = "webapp"
+       name = kubernetes_deployment.frontend.spec.0.template.0.metadata.0.labels.name
     }
     port {
       port        = 8080
