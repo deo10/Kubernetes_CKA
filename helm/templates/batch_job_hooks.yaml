@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}
+
+#adding config to run this job as pre-upgrade part
+  annotations:
+    "helm.sh/hook": pre-upgrade #pre-install pre-delete post-install
+    "helm.sh/hook-weight": "5" #adding weight value to order the apply of hooks
+
+    "helm.sh/hook-delete-policy": hook-succeeded #hook-failed before-hook-creation -> when to delete
+
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-nginx-job
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: pre-upgrade-backup-job
+        image: "alpine"
+        command: ["/bin/backup.sh"]

@@ -1,0 +1,49 @@
+#default values for chart
+
+#service details
+service:
+  type: NodePort
+  port: 8080
+  targetPort: 8080
+  nodePort: 30080
+
+#configmap_color details using "if - else if - else"
+environment: development
+
+#configmap_regions details using "ranges"
+regions:
+  - ohio
+  - newyork
+  - ontario
+  - london
+  - singapore
+  - mumbai
+
+
+#configmap details using "with block"
+app:
+  ui:
+    bg: red
+    fg: black
+  db:
+    name: "users"
+    conn: "mongodb://localhost:27020/mydb"
+
+#define to create or not service account
+serviceaccount:
+  create: true
+  #adding labels using "range"
+  labels:
+    tier: frontend
+    type: web
+    mode: proxy
+
+#define config for deployment
+replicaCount: 3
+image:
+  repository: nginx
+  pullPolicy: ifNotPresent
+  tag: "1.16.0"
+
+
+
