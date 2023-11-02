@@ -1,0 +1,14 @@
+#In the requirements.yaml file, list the dependencies for your Helm chart.
+#Each dependency should include the name of the chart, the chart repository URL
+#(if it's not from the default Helm Hub), and the version or version constraints.
+#In this example, your chart has two dependencies: Redis and PostgreSQL.
+#The version field specifies the desired version, and you can use version constraints (e.g., ^ for compatible versions) for flexibility.
+#Before you install or upgrade your chart, you need to ensure that Helm fetches and installs the specified dependencies.
+
+
+dependencies:
+  - name: redis
+    version: 10.4.1
+    repository: https://example.com/charts
+  - name: postgres
+    version: ^9.0.0
