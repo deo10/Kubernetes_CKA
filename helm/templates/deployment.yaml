@@ -19,7 +19,7 @@ spec:
         type: RollingUpdate
       containers:
       - name: myapp
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }} #combine values
         ports:
           - name: http
             containerPort: 80
