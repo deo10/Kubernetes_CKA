@@ -10,6 +10,9 @@ crictl logs [container_id]
 
 journalctl -fu kubelet | grep apiserver
 journalctl | grep kubelet
+journalctl -u kubelet --since "30 min ago" | grep 'Error:'
+
+vi /var/lib/kubelet/config.yaml
 
 #logs for the pods
 /var/log/pods

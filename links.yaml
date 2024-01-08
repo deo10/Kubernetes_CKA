@@ -14,6 +14,7 @@ https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/
 path:
 kubectl get node -o json | jq -c 'path(..)|[.[]|tostring]|join(".")' | grep -i status
 kubectl get node -o json | jq -c 'paths|join(".")'
+kubectl --context cluster1 get service service-cka25-arch -o jsonpath='{.spec.ports[0].targetPort}'
 
 
 Example:

@@ -33,3 +33,34 @@ placed under the /etc/kubernetes/manifests directory.
 If you do change --data-dir to /var/lib/etcd-from-backup in the ETCD YAML file,
 make sure that the volumeMounts for etcd-data is updated as well, with the mountPath pointing
 to /var/lib/etcd-from-backup
+
+
+ETCD install
+
+#KodeKloud
+cd /tmp
+export RELEASE=$(curl -s https://api.github.com/repos/etcd-io/etcd/releases/latest | grep tag_name | cut -d '"' -f 4)
+wget https://github.com/etcd-io/etcd/releases/download/${RELEASE}/etcd-${RELEASE}-linux-amd64.tar.gz
+tar xvf etcd-${RELEASE}-linux-amd64.tar.gz ; cd etcd-${RELEASE}-linux-amd64
+mv etcd etcdctl  /usr/local/bin/
+/usr/local/bin/etcd --version
+/usr/local/bin/etcdctl version
+/usr/local/bin/etcdutl version
+
+#K8s \ https://github.com/etcd-io/etcd/releases
+# choose either URL
+GOOGLE_URL=https://storage.googleapis.com/etcd
+GITHUB_URL=https://github.com/etcd-io/etcd/releases/download
+DOWNLOAD_URL=${GOOGLE_URL}
+
+rm -f /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
+rm -rf /tmp/etcd-download-test && mkdir -p /tmp/etcd-download-test
+
+curl -L ${DOWNLOAD_URL}/${ETCD_VER}/etcd-${ETCD_VER}-linux-amd64.tar.gz -o /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
+tar xzvf /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz -C /tmp/etcd-download-test --strip-components=1
+rm -f /tmp/etcd-${ETCD_VER}-linux-amd64.tar.gz
+
+/tmp/etcd-download-test/etcd --version
+/tmp/etcd-download-test/etcdctl version
+/tmp/etcd-download-test/etcdutl version
+mv etcd etcdctl  /usr/local/bin/
