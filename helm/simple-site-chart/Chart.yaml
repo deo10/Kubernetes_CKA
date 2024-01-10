@@ -1,0 +1,9 @@
+apiVersion: v2
+appVersion: 1.23.3
+description: A simple Helm Chart to deploy a simple website
+home: https://4allportal.com
+maintainers:
+- email: j.kraemer@4allportal.com
+  name: jpkraemer-mg
+name: simple-website
+version: 1.0.2
