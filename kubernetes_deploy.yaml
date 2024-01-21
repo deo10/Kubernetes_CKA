@@ -9,7 +9,6 @@ kubectl expose deploy [name] --type=NodePort --port=80 --name=nginx-service --dr
 
 \\ deploy pod-difinition
 apiVersion: apps/v1
-kind: apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-app

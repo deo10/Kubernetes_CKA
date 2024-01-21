@@ -1,0 +1,192 @@
+#create PV and PVC
+#create deployment for drupal mysql that will use pvc
+#create deployment for drupal
+#create service for both drupal and drupal db
+
+#to improve
+#Security:
+#Consider adding security-related configurations, such as
+# - PodSecurityPolicy
+# - SecurityContext
+# - using Pod Disruption Budgets if needed.
+#Health Probes (Optional):
+#Consider adding liveness and readiness probes to your deployments
+
+
+
+#create MYSQL secrets
+kubectl create secret generic database \
+--from-literal=MYSQL_ROOT_PASSWORD=admin123 \
+--from-literal=MYSQL_DATABASE=kodekloud \
+--from-literal=MYSQL_USER=kodekloud \
+--from-literal=MYSQL_PASSWORD=admin123 \
+--from-literal=MYSQL_HOST=mysql-service
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: drupal-mysql-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  hostPath:
+    path: /drupal-mysql-data
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: drupal-mysql-pvc
+spec:
+  resources:
+    requests:
+      storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drupal-mysql
+  template:
+    metadata:
+      labels:
+        app: drupal-mysql
+    spec:
+      containers:
+      - name: drupal-mysql
+        image: mysql:5.7
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "0.5"     
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_USER
+        - name: MYSQL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_HOST
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: drupal-mysql-pvc
+          mountPath: "/var/lib/mysql"        
+      volumes:
+      - name: drupal-mysql-pvc
+        persistentVolumeClaim:
+          claimName: drupal-mysql-pvc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drupal
+  template:
+    metadata:
+      labels:
+        app: drupal
+    spec:
+      containers:
+      - name: drupal
+        image: drupal:8.6
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "100Mi"
+            cpu: "100m" 
+        ports:
+        - containerPort: 80
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_PASSWORD
+        - name: MYSQL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: database
+              key: MYSQL_HOST
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drupal-service
+spec:
+  type: NodePort
+  selector:
+    app: drupal
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30095 #k8s will deploy random port, don't forget to change manually
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drupal-mysql-service
+spec:
+  type: ClusterIP
+  selector:
+    app: drupal-mysql
+  ports:
+  - port: 3306
+    targetPort: 3306

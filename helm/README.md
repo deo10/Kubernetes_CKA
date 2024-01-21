@@ -21,6 +21,8 @@ helm search repo [repo_name] # to search locally
 helm repo add [name] [url] # to add repo from hub locally
 helm repo remove [name] #to remove repo
 
+helm pull [chart-name] [version] #to download chart as tar archive
+
 helm repo list # list local repos
 
 helm install [name] [repo/name]
