@@ -1,0 +1,87 @@
+#Pod Security Policies (PSPs) are Kubernetes resources that control the security context under which pods can run
+#hey define a set of conditions that a pod must meet to be accepted into the system.
+#Pod Security Policies are enforced by the admission controller, and they can help you ensure that pods are running with the appropriate level of security.
+
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: mysql-psp
+spec:
+  privileged: false  # Don't allow privileged pods
+  allowPrivilegeEscalation: false  # Don't allow privilege escalation
+  requiredDropCapabilities:
+    - ALL  # Drop all capabilities
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'persistentVolumeClaim'
+  hostNetwork: false  # Don't allow pods to use the host network
+  hostPorts:
+    - min: 1
+      max: 65535
+  hostIPC: false  # Don't allow pods to use the host IPC namespace
+  hostPID: false  # Don't allow pods to use the host PID namespace
+  seLinux:
+    rule: 'RunAsAny'  # Allow any SELinux context
+  runAsUser:
+    rule: 'MustRunAsNonRoot'  # Force non-root user
+  supplementalGroups:
+    rule: 'MustRunAs'  # Force non-root group
+    ranges:
+      - min: 1
+        max: 65535
+  fsGroup:
+    rule: 'MustRunAs'  # Force non-root group
+    ranges:
+      - min: 1
+        max: 65535
+  readOnlyRootFilesystem: true  # Mount root filesystem as read-only
+
+# privileged: Set to false to prevent privileged pods.
+# allowPrivilegeEscalation: Set to false to prevent privilege escalation.
+# requiredDropCapabilities: Drop all Linux capabilities.
+# volumes: Allow specific volumes that MySQL might need.
+# hostNetwork: Set to false to disallow using the host network.
+# hostPorts: Allow ports within the given range to be used by the pod.
+# hostIPC: Set to false to disallow using the host IPC namespace.
+# hostPID: Set to false to disallow using the host PID namespace.
+# seLinux: Allow any SELinux context.
+# runAsUser: Force pods to run as non-root.
+# supplementalGroups: Force pods to use non-root supplemental groups.
+# fsGroup: Force pods to use non-root fsGroup.
+# readOnlyRootFilesystem: Mount root filesystem as read-only.
+
+#Once you've created the Pod Security Policy, you need to ensure that your service account or user has the appropriate permissions to use it.
+#You can then reference this Pod Security Policy in your MySQL deployment YAML by adding podSecurityContext:
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      securityContext:
+        podSecurityPolicyName: mysql-psp  # Reference to the Pod Security Policy
+      containers:
+      - name: mysql
+
+#By applying this Pod Security Policy, you ensure that MySQL pods are running with the appropriate security context according to the defined policies.
+
+
+
+
+
+
+
+

@@ -7,11 +7,24 @@
 #Security:
 #Consider adding security-related configurations, such as
 # - PodSecurityPolicy
+# separate kind where you describe security context and request it in deployment yaml
+# see more - kubernetes_security_podsecuritypolicy.yaml
+#
 # - SecurityContext
-# - using Pod Disruption Budgets if needed.
-#Health Probes (Optional):
+#preparation step required for implementation
+#custom docker image with layer for creation of group\user required to implement security context
+#securityContext:
+#  runAsUser: <mysql-user-id>
+#  fsGroup: <mysql-group-id>
+#  runAsNonRoot: true
+#  readOnlyRootFilesystem: true
+#
+# - Pod Disruption Budgets
+# see more - kubernetes_pod_disruption_budget.yaml
+#
+#Health Probes:
 #Consider adding liveness and readiness probes to your deployments
-
+# see more - kubernetes_probes.yaml
 
 
 #create MYSQL secrets
@@ -103,7 +116,17 @@ spec:
         - containerPort: 3306
         volumeMounts:
         - name: drupal-mysql-pvc
-          mountPath: "/var/lib/mysql"        
+          mountPath: "/var/lib/mysql"
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 10      
       volumes:
       - name: drupal-mysql-pvc
         persistentVolumeClaim:
@@ -162,6 +185,18 @@ spec:
             secretKeyRef:
               name: database
               key: MYSQL_HOST
+        readinessProbe:
+          httpGet:
+            path: /index.php
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /index.php
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 10
 
 
 ---

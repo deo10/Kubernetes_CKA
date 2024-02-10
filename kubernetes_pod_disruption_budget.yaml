@@ -1,0 +1,48 @@
+# Pod Disruption Budgets (PDBs) are Kubernetes objects used to define the minimum number or percentage of pods
+# that must remain available during voluntary disruptions, such as maintenance or scaling activities.
+# PDBs help ensure high availability of applications by preventing too many pods from being terminated simultaneously.
+# When deploying MySQL or any critical application in Kubernetes, it's essential to maintain a certain level of availability to avoid data loss or downtime.
+# You can use PDBs to specify how many replicas of MySQL pods should remain available during disruptions.
+
+# You define a Pod Disruption Budget specifying the minimum number or percentage of pods that must remain available.
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: mysql-pdb
+spec:
+  minAvailable: 1  # Ensure at least 1 pod remains available
+  selector:
+    matchLabels:
+      app: mysql
+
+# In this example, minAvailable: 1 ensures that at least one MySQL pod remains available during disruptions.
+# Adjust this value based on your deployment requirements.
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:latest
+  podDisruptionBudget:
+    metadata:
+      name: mysql-pdb
+
+# Ensure that the selector in the Pod Disruption Budget matches the labels of your MySQL pods.
+# With this setup, Kubernetes will ensure that the number of MySQL pods available during voluntary
+# disruptions adheres to the specified Pod Disruption Budget. This helps maintain the availability
+# of your MySQL deployment, reducing the risk of data loss or service interruptions.
+# Adjust the minAvailable value according to your desired level of availability and the size of your deployment.

@@ -1,0 +1,92 @@
+#Liveness Probe:
+#Checks if the container is alive and healthy.
+#If the liveness probe fails, Kubernetes restarts the container.
+#Useful for detecting when an application inside the container has crashed or entered an unhealthy state.
+
+#Readiness Probe:
+#Checks if the container is ready to accept traffic.
+#If the readiness probe fails, the container is removed from the endpoints of all services and the traffic is no longer routed to it.
+#Useful for delaying the routing of traffic to a pod until it's ready to handle requests, such as when an application is still initializing or loading data.
+
+#Startup Probe:
+#Similar to a liveness probe but it only runs during the initial startup of the container.
+#Useful for situations where the application might take a longer time to start up initially, but once running, is expected to respond quickly to liveness probes.
+
+#For a MySQL deployment, you can utilize these probes to ensure the availability and readiness of your MySQL instance:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 15
+          periodSeconds: 10
+
+---
+#In this example:
+#The readinessProbe checks if MySQL is ready to accept traffic by attempting to establish a TCP connection to port 3306.
+#It waits for 10 seconds after the container starts (initialDelaySeconds: 10), and then checks every 5 seconds (periodSeconds: 5).
+#The livenessProbe checks if MySQL is still alive and healthy by also attempting to establish a TCP connection to port 3306.
+#It waits for 15 seconds after the container starts (initialDelaySeconds: 15), and then checks every 10 seconds (periodSeconds: 10).
+
+---
+readinessProbe:
+  httpGet:
+    path: /index.php
+    port: 80
+  initialDelaySeconds: 10
+  periodSeconds: 5
+
+livenessProbe:
+  httpGet:
+    path: /index.php
+    port: 80
+  initialDelaySeconds: 15
+  periodSeconds: 10
+
+#In this example:
+#Checks if webserver is still alive and healthy by making an HTTP GET request to a specific endpoint, such as /index.php.
+#If the HTTP GET request returns a success response (HTTP status code 200-299), webserver is considered alive.
+
+---
+readinessProbe:
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - /path/to/custom-check.sh
+  initialDelaySeconds: 10
+  periodSeconds: 5
+
+livenessProbe:
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - /path/to/custom-check.sh
+  initialDelaySeconds: 15
+  periodSeconds: 10
+
+#Exec Probe:
+#Executes a specified command inside the container and checks the exit status.
+#Useful for more advanced health checks that can't be performed with HTTP or TCP probes,
+#such as checking database connectivity, file system availability, or custom application-specific checks.
