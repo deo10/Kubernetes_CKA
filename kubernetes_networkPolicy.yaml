@@ -1,20 +1,21 @@
-\\ by default - "all allow"
-Ingress - enter
-Egress - exit
+# by default - "all allow"
+#Ingress - enter
+#Egress - exit
+
 
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: db-policy
 spec:
-  podSelector:
+  podSelector: #network policy would be applied on
     matchLabels:
       role: db
   policyTypes:
   - Ingress
   - Egress
   ingress:
-  - from:
+  - from: #network policy would allow connections from
     - podSelector:
         matchLabels:
           name: api-pod
@@ -27,7 +28,7 @@ spec:
     - protocol: TCP
       port: 3306
   egress:
-  - to:
+  - to: #network policy would allow connections to
     - ipBlock:
       cidr: 192.168.0.5/32
     ports:
