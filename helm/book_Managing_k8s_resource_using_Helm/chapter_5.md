@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 pages 170-180
+=======
+pages 170-
+>>>>>>> 991f1ffee32824398a87f4da3555c8f05c67c291
 
 view helm release revision history
 kubectl get secrets -n chapter3
