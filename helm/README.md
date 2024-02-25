@@ -32,7 +32,7 @@ helm repo list # list local repos
 show
 helm show chart bitnami/wordpress --version 12.1.6 #Display the chart’s metadata (or chart definition)
 helm show readme bitnami/wordpress --version 12.1.6 #Display the chart’s README file
-helm show values bitnami/wordpress --version 12.1.6 #Display the chart’s values
+helm show values bitnami/wordpress --version 12.1.6 #Display the Chart.yaml content
 helm show all bitnami/wordpress --version 12.1.6 #Display the chart’s definition, README files, and values
 
 helm install [name] [repo/name]
