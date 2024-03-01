@@ -1,4 +1,4 @@
-pages 180 - 
+pages 180 - 218
 
 # creating new Helm chart called guestbook and it's folder structure
 
