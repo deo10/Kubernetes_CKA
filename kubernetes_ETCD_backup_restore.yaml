@@ -8,7 +8,7 @@ check ETCD pod details
 
 
 \\Backup
-ETCDCTL_API=3 etcdctl snapshot --cacert="" --cert="" --endpoints=[127.0.0.1:2379] --key="" filepath/filename.db
+ETCDCTL_API=3 etcdctl --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --endpoints=127.0.0.1:2379 --key=/etc/kubernetes/pki/etcd/server.key snapshot save /opt/cluster1_backup.db
 
 \\Restore
 ETCDCTL_API=3 etcdctl --data-dir /var/lib/etcd-from-backup snapshot restore /opt/snapshot-pre-boot.db
