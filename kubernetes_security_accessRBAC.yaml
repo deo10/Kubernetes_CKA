@@ -15,6 +15,8 @@ k api-resources --namespaced=true/false (cluster vs namespaced resources)
 k create role developer --resources=pods --verb=get,list --dry-run=client -o yaml
 k create rolebinding dev-user-developer-binding --role=developer --user=dev-user --dry-run=client -o yaml
 
+full access on core api
+k create clusterrole name --verb=* --resource=* 
 
 - developer-role.yaml
 apiVersion: rbac.authorization.k8s.io/v1
