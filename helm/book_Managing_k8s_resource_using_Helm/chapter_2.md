@@ -1,5 +1,7 @@
 pages 103-119
 
+https://github.com/PacktPublishing/Managing-Kubernetes-Resources-using-Helm
+
 1. How does Helm authenticate to a Kubernetes cluster?
 
 Helm authenticates to a Kubernetes cluster typically by utilizing the Kubernetes configuration file (~/.kube/config by default) or by directly setting the kubeconfig environment variable (KUBECONFIG). This configuration file contains authentication details such as API server URL, cluster certificate authority, and user credentials (like tokens or certificates).
