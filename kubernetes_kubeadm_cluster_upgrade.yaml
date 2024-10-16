@@ -1,0 +1,61 @@
+# task from the kodekloud learn
+# https://learn.kodekloud.com/user/courses/cka-certification-course-certified-kubernetes-administrator/module/ff81e3c9-7d91-490f-80a0-3f1b69bb1e60/lesson/7dac1a1c-d6a5-47a5-a950-fec488fd4165
+#
+# Upgrade the current version of kubernetes from 1.29.0 to 1.30.0
+# exactly using the kubeadm utility.
+# Make sure that the upgrade is carried out one node at a time starting
+# with the controlplane node.
+# To minimize downtime, the deployment gold-nginx should be rescheduled
+# on an alternate node before upgrading each node.
+# Upgrade controlplane node first and drain node node01 before upgrading it.
+# Pods for gold-nginx should run on the controlplane node subsequently.
+#
+
+kubectl drain controlplane --ignore-daemonsets --delete-local-data
+
+ssh controlplane
+
+vi /etc/apt/sources.list.d/kubernetes.list
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /
+
+apt-get update && apt-get install -y kubeadm=1.30.0-1.1
+
+kubeadm version
+sudo kubeadm upgrade plan
+sudo kubeadm upgrade apply v1.30.0
+
+sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.30.0-1.1' kubectl='1.30.0-1.1' && \
+sudo apt-mark hold kubelet kubectl
+
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+kubectl uncordon controlplane
+
+
+---
+
+kubectl drain node01 --ignore-daemonsets --delete-local-data
+
+ssh node01
+
+vi /etc/apt/sources.list.d/kubernetes.list
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /
+
+
+sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.30.0-1.1' && \
+sudo apt-mark hold kubeadm
+
+sudo kubeadm upgrade node
+
+sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.30.0-1.1' kubectl='1.30.0-1.1' && \
+sudo apt-mark hold kubelet kubectl
+
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+kubectl uncordon node01
+
