@@ -4,6 +4,10 @@ kubectl get deploy
 kubectl apply -f deployment.yaml
 or
 kubectl set image [deploy_name] nginx=nginx:1.9.1
+kubectl set image deployment/nginx-deploy nginx=nginx:1.17 --record
+
+add annotation
+kubectl annotate deployment nginx-deploy kubernetes.io/change-cause="Updated nginx image to 1.17"
 
 kubectl rollout status [deploy_name]
 kubectl rollout history [deploy_name]
