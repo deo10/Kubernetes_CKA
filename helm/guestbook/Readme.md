@@ -23,8 +23,17 @@ from https://github.com/PacktPublishing/Managing-Kubernetes-Resources-using-Helm
 # adding repo
 helm repo add bitnami https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
 
+# open:
+Managing-Kubernetes-Resources-using-Helm\
+
 # update dependencies (download)
-helm dependency update chapter7/guestbook
+helm dependency update chapter9/guestbook
+
+# installing helm - ! no _ symbols in name of the chart
+-> cd chapter9
+helm install my-guestbook guestbook --wait
+
+helm test my-guestbook
 
 
 
