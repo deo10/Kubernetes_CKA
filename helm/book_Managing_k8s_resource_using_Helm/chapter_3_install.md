@@ -1,6 +1,6 @@
 pages 119-153
 
-install wordpress chart
+# install wordpress chart
 
 prep work:
 
