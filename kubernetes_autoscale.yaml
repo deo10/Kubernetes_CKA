@@ -1,0 +1,130 @@
+# Horizontal Pod Autoscaling (HPA) and Vertical Pod Autoscaling (VPA)
+
+## Horizontal Pod Autoscaling (HPA) ##
+
+# $ kubectl autoscale deployment my-app --cpu-percent=50 --min=1 --max=10
+
+# Once executed, Kubernetes creates an HPA that continuously polls the metrics
+# server based on the pod’s CPU limit (500 mCPU in this case). If CPU usage
+# exceeds 50% of this limit, HPA automatically scales the deployment up or down.
+# To check the status of your HPA, run:
+
+# $ kubectl get hpa
+
+# This command displays details such as current CPU utilization against the
+# threshold and the current number of running pods.
+# If you need to remove the autoscaler later, simply run:
+
+# $ kubectl delete hpa my-app
+
+# declarative HPA
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-app
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+
+---
+
+## Vertical Pod Autoscaling (VPA) ##
+
+# VPA automatically adjusts the CPU and memory requests of a pod based on its
+# actual usage. This ensures that the pod has enough resources to run efficiently
+
+# Actual Installation steps are here:
+# https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/docs/installation.md
+
+# k get pods -n kube-system | grep vpa
+
+# k get vpa
+
+# k edit vpa flask-app
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  creationTimestamp: "2025-03-23T12:24:11Z"
+  generation: 1
+  name: flask-app
+  namespace: default
+  resourceVersion: "2272"
+  uid: 881f0acd-8cf3-45ae-848f-0c691f1de540
+spec:
+  resourcePolicy:
+    containerPolicies:
+    - containerName: '*'
+      controlledResources:
+      - cpu
+      - memory
+      maxAllowed:
+        cpu: 1
+        memory: 500Mi
+      minAllowed:
+        cpu: 100m
+        memory: 100Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: flask-app
+  updatePolicy:
+    evictionRequirements:
+      - changeRequirement: TargetHigherThanRequests
+        resources:
+        - cpu
+        - memory
+    updateMode: Recreate
+status:
+  conditions:
+  - lastTransitionTime: "2025-03-23T12:24:31Z"
+    status: "True"
+    type: RecommendationProvided
+  recommendation:
+    containerRecommendations:
+    - containerName: flask-app
+      lowerBound:
+        cpu: 100m
+        memory: 262144k
+      target:
+        cpu: 100m
+        memory: 262144k
+      uncappedTarget:
+        cpu: 25m
+        memory: 262144k
+      upperBound:
+        cpu: 100m
+        memory: 262144k
+
+---
+---
+apiVersion: "autoscaling.k8s.io/v1"
+kind: VerticalPodAutoscaler
+metadata:
+  name: flask-app
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: flask-app-4
+  updatePolicy:
+    updateMode: "Off"  # You can set this to "Auto" if you want automatic updates
+  resourcePolicy:
+    containerPolicies:
+      - containerName: '*'
+        minAllowed:
+          cpu: 100m
+        maxAllowed:
+          cpu: 1000m
+        controlledResources: ["cpu"]
+
