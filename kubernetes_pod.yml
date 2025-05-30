@@ -47,6 +47,8 @@ spec:
     limits:
       memory: 2Gi
       cpu: 2
+    ports:
+    - containerPort: 6379
   - image: redis123
     name: redis_2
   nodeSelector:
