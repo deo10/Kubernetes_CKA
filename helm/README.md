@@ -68,3 +68,59 @@ helm template ./nginx-chart --debug # to see details about the issue
 helm install test_release ./nginx-chart --dry-run # to get results from kubernetes if there is an issue
 
 helm package ./nginx-chart # to package the chart
+
+
+##Examples:##
+#Task 1: Install a Chart
+#Install the nginx Helm chart from the stable repository. Use a #specific release name (my-nginx) and set the replicas to 3.
+
+helm repo add [name] [url]  # to add repo
+helm search repo nginx --versions  # to search on added repo
+helm install my-nginx repo/nginx --set replicas=3
+
+#Task 2: List Releases
+#List all Helm releases that are currently deployed in the namespace #kube-system.
+
+helm list --namespace kube-system
+
+#Task 3: Upgrade a Chart
+#You currently have a release named my-app running version 1.0.0 of a #chart. Upgrade it to the next version (e.g., 1.1.0) using Helm.
+
+helm upgrade my-app repo/my-app --version 1.1.0
+
+#Task 4: Customize Values
+#Download the redis chart values file (values.yaml) from the #repository. Edit the file to set a custom memory limit of 512Mi for #the master pod, then deploy the chart.
+
+helm pull repo/redis --untar --untardir ./redis-chart  # Download the chart
+cd redis-chart
+# Edit values.yaml to set memory limit
+# For example, set:
+resources:
+  limits:
+    memory: 512Mi
+helm install my-redis ./redis-chart -f values.yaml # Deploy with custom values
+or
+helm install my-redis ./redis-chart --set resources.limits.memory=512Mi  # Deploy with custom values via command line
+
+
+#Task 5: Rollback a Release
+#Rollback the Helm release my-nginx to its previous stable version (prior deployment).
+
+helm history my-nginx # Check the history to find the revision number
+helm rollback my-nginx 1  # Assuming the previous version is revision 1
+helm status my-nginx # Check the status after rollback to ensure it was successful
+
+#Task 6: Uninstall a Release
+#Uninstall the Helm release my-nginx. Make sure all associated Kubernetes resources are deleted.
+
+helm uninstall my-nginx # Uninstall the release and delete associated resources
+
+
+Task 7: Debugging Failed Installations
+You attempted to install a release, but it failed. What Helm command would you issue to debug the failed installation and get detailed information?
+
+helm status my-nginx # Check the status of the release to see why it failed
+helm get manifest my-nginx # Get the manifest to see what was applied
+helm get all my-nginx # Get all information about the release, including the manifest and values used
+
+helm install my-nginx [repo]/nginx --debug --dry-run # To simulate the installation and see detailed output without actually deploying it

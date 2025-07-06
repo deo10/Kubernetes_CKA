@@ -1,4 +1,5 @@
 # install kustomize
+it's part of kubectl now, so you can use it directly with kubectl commands.
 
 # kustomize folder structure
    someapp/

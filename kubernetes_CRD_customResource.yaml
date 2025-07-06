@@ -47,7 +47,7 @@ spec:
 #Below is an example of a custom resource YAML file that creates an instance of `MyCustomResource`:
 
 
-apiVersion: example.com/v1
+apiVersion: example.com/v1alpha1
 kind: MyCustomResource
 metadata:
   name: my-custom-resource
