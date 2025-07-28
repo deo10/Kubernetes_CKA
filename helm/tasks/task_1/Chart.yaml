@@ -1,0 +1,9 @@
+apiVersion: v2
+appVersion: 1.23.3
+description: custom-app
+home: https://4allportal.com
+maintainers:
+- email: autho@mail.com
+  name: author
+name: my-custom-app
+version: 1.0.2
